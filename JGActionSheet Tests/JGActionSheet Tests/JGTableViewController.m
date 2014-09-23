@@ -15,6 +15,7 @@
     UIView *_anchorView;
     BOOL _anchorLeft;
     JGActionSheet *_simple;
+	JGActionSheet *_bookmarks;
 }
 
 @end
@@ -133,7 +134,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 3;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -158,10 +159,16 @@
     else if (indexPath.row == 1) {
         cell.textLabel.text = @"Multiple Sections";
     }
-    else {
+    else if (indexPath.row == 2)  {
         cell.textLabel.text = @"Multiple Sections & Content View";
     }
-    
+	else if (indexPath.row == 3)  {
+		cell.textLabel.text = @"Bookmarks";
+	}
+	else {
+		cell.textLabel.text = @"Bookmarks Big";
+	}
+	
     return cell;
 }
 
@@ -172,9 +179,15 @@
     else if (button.tag == 1) {
         [self multipleSections:button];
     }
-    else {
-        [self multipleAndContentView:button];
-    }
+	else if (button.tag == 2) {
+		[self multipleAndContentView:button];
+	}
+	else if (button.tag == 3) {
+		[self bookmarksView:button big: NO];
+	}
+	else {
+		[self bookmarksView:button big: YES];
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -186,9 +199,81 @@
     else if (indexPath.row == 1) {
         [self multipleSections:nil];
     }
+	else if (indexPath.row == 2) {
+		[self multipleAndContentView:nil];
+	}
+	else if (indexPath.row == 3) {
+		[self bookmarksView:nil big: NO];
+	}
     else {
-        [self multipleAndContentView:nil];
+        [self bookmarksView:nil big: YES];
     }
+}
+
+- (void) bookmarksView: (UIView *)anchor big: (BOOL) big
+{
+	//This is am example of an action sheet that is reused!
+	//if (!_bookmarks)
+	{
+//		_bookmarks = [JGActionSheet actionSheetWithSections:@[[JGActionSheetSection sectionWithTitle:@"Title" message:@"Message" buttonTitles:@[@"Yes", @"No"] buttonStyle:JGActionSheetButtonStyleDefault], [JGActionSheetSection sectionWithTitle:nil message:nil buttonTitles:@[@"Cancel"] buttonStyle:JGActionSheetButtonStyleCancel]]];
+
+		NSMutableArray *marks = [NSMutableArray arrayWithCapacity: 100];
+		int count = big? 55: 5;
+		NSArray *fmts_big = @[@"Button Name Button %d",
+							  @"Ant Hills Button Name Button %d",
+							  @"Beach Bum Button %d",
+							  @"A Very Long ButtonVery Long ButtonVery Long Button Name Button %d"];
+		NSArray *fmts_reg = @[@"Button %d",
+							  @"Button Button %d",
+							  @"Button Button Button %d",
+							  @"Button Button Button Button %d"];
+		
+		NSArray *fmts = big? fmts_big: fmts_reg;
+		
+		for (int index = 0; index < count; index++)
+		{
+			NSString *fmt = fmts[ index % [fmts count]];
+			[marks addObject: [NSString stringWithFormat:fmt, index]];
+		}
+
+		_bookmarks = [JGActionSheet actionSheetWithSections: @[
+	[JGActionSheetSection sectionWithTitle:nil message:nil
+							  buttonTitles:@[@"Add Bookmark", @"Show Bookmarks"]
+							   buttonStyle:JGActionSheetButtonStyleBlue],
+	[JGActionSheetSection sectionWithTitle:nil message:nil
+							  buttonTitles: marks
+							   buttonStyle:JGActionSheetButtonStyleDefault]
+	]];
+
+		_bookmarks.delegate = self;
+		
+		_bookmarks.insets = UIEdgeInsetsMake(20.0f, 0.0f, 0.0f, 0.0f);
+		
+		if (iPad) {
+			[_bookmarks setOutsidePressBlock:^(JGActionSheet *sheet) {
+				[sheet dismissAnimated:YES];
+			}];
+		}
+		
+		[_bookmarks setButtonPressedBlock:^(JGActionSheet *sheet, NSIndexPath *indexPath) {
+			[sheet dismissAnimated:YES];
+		}];
+	}
+	
+	if (anchor && iPad) {
+		_anchorView = anchor;
+		_anchorLeft = YES;
+		_currentAnchoredActionSheet = _bookmarks;
+		
+		CGPoint p = (CGPoint){-5.0f, CGRectGetMidY(anchor.bounds)};
+		
+		p = [self.navigationController.view convertPoint:p fromView:anchor];
+		
+		[_bookmarks showFromPoint:p inView:[[UIApplication sharedApplication] keyWindow] arrowDirection:JGActionSheetArrowDirectionRight animated:YES];
+	}
+	else {
+		[_bookmarks showInView:self.navigationController.view animated:YES];
+	}
 }
 
 - (void)showSimple:(UIView *)anchor {

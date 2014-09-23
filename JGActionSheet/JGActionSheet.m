@@ -382,8 +382,12 @@ static BOOL disableCustomEasing = NO;
     
     [button setTitleColor:titleColor forState:UIControlStateNormal];
     
-    button.titleLabel.font = font;
-    
+	button.titleLabel.font = font;
+	
+	// !!@ EP Mod
+	//button.titleLabel.textAlignment	= NSTextAlignmentLeft;
+	[button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+
     [button setBackgroundImage:[self pixelImageWithColor:backgroundColor] forState:UIControlStateNormal];
     [button setBackgroundImage:[self pixelImageWithColor:borderColor] forState:UIControlStateHighlighted];
     
@@ -396,13 +400,18 @@ static BOOL disableCustomEasing = NO;
     b.layer.cornerRadius = 2.0f;
     b.layer.masksToBounds = YES;
     b.layer.borderWidth = 1.0f;
-    
+	
+	title = [@" " stringByAppendingString: title];
+	
     [b setTitle:title forState:UIControlStateNormal];
     
     [b addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     [self setButtonStyle:style forButton:b];
-    
+	
+	// !!@ EP Mod
+	NSLog(@"makeButtonWithTitle %@ %ld ", b, b.titleLabel.textAlignment);
+	
     return b;
 }
 
@@ -676,8 +685,9 @@ static BOOL disableCustomEasing = NO;
     _finalContentFrame = _scrollViewHost.frame;
     
     _scrollView.frame = _scrollViewHost.bounds;
-    
-    [_scrollView scrollRectToVisible:(CGRect){{0.0f, _scrollView.contentSize.height-1.0f}, {1.0f, 1.0f}} animated:NO];
+	
+	// !!@ EP Mod
+    //[_scrollView scrollRectToVisible:(CGRect){{0.0f, _scrollView.contentSize.height-1.0f}, {1.0f, 1.0f}} animated:NO];
 }
 
 - (void)layoutForVisible:(BOOL)visible {
