@@ -303,9 +303,12 @@
         
         CGPoint p = (CGPoint){-5.0f, CGRectGetMidY(anchor.bounds)};
         
-        p = [self.navigationController.view convertPoint:p fromView:anchor];
+        UIView *theView = self.navigationController.view;
         
-        [_simple showFromPoint:p inView:[[UIApplication sharedApplication] keyWindow] arrowDirection:JGActionSheetArrowDirectionRight animated:YES];
+        p = [theView convertPoint:p fromView:anchor];
+        
+        //[_simple showFromPoint:p inView:[[UIApplication sharedApplication] keyWindow] arrowDirection:JGActionSheetArrowDirectionRight animated:YES];
+        [_simple showFromPoint:p inView:theView arrowDirection:JGActionSheetArrowDirectionRight animated:YES];
     }
     else {
         [_simple showInView:self.navigationController.view animated:YES];
