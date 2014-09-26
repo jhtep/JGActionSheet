@@ -12,6 +12,7 @@
 		6BCBC6C01987D15C000DDD51 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6BCBC6BF1987D15C000DDD51 /* Images.xcassets */; };
 		6BCBC6D71987D218000DDD51 /* JGTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCBC6D61987D218000DDD51 /* JGTableViewController.m */; };
 		6BCBC6E31988EC60000DDD51 /* JGActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCBC6E21988EC60000DDD51 /* JGActionSheet.m */; };
+		BA3DA54219D45FDA00D1935C /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA3DA54119D45FDA00D1935C /* Launch Screen.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		6BCBC6D61987D218000DDD51 /* JGTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGTableViewController.m; sourceTree = "<group>"; };
 		6BCBC6E11988EC60000DDD51 /* JGActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JGActionSheet.h; path = ../../JGActionSheet/JGActionSheet.h; sourceTree = "<group>"; };
 		6BCBC6E21988EC60000DDD51 /* JGActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JGActionSheet.m; path = ../../JGActionSheet/JGActionSheet.m; sourceTree = "<group>"; };
+		BA3DA54119D45FDA00D1935C /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "Launch Screen.xib"; path = "JGActionSheet Tests/Launch Screen.xib"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +43,7 @@
 		6BCBC6A61987D15C000DDD51 = {
 			isa = PBXGroup;
 			children = (
+				BA3DA54119D45FDA00D1935C /* Launch Screen.xib */,
 				6BCBC6B11987D15C000DDD51 /* JGActionSheet Tests */,
 				6BCBC6B01987D15C000DDD51 /* Products */,
 			);
@@ -146,6 +149,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6BCBC6C01987D15C000DDD51 /* Images.xcassets in Resources */,
+				BA3DA54219D45FDA00D1935C /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

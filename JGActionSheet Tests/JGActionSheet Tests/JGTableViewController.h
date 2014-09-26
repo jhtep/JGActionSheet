@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface JGTableViewController : UITableViewController
+@interface JGTableViewController : UITableViewController <UITextFieldDelegate>
 
 @end

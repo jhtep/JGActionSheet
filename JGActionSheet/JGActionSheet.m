@@ -410,7 +410,7 @@ static BOOL disableCustomEasing = NO;
     [self setButtonStyle:style forButton:b];
 	
 	// !!@ EP Mod
-	NSLog(@"makeButtonWithTitle %@ %ld ", b, b.titleLabel.textAlignment);
+	//NSLog(@"makeButtonWithTitle %@ %ld ", b, b.titleLabel.textAlignment);
 	
     return b;
 }

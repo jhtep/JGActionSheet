@@ -15,7 +15,13 @@
     UIView *_anchorView;
     BOOL _anchorLeft;
     JGActionSheet *_simple;
-	JGActionSheet *_bookmarks;
+    JGActionSheet *_bookmarks;
+    
+    JGActionSheet   *_activeSheet;
+    UITextField     *_activeTextField;
+    CGRect          saveRect;
+    
+    BOOL            registerDone;
 }
 
 @end
@@ -134,7 +140,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 5;
+    return 6;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -162,11 +168,14 @@
     else if (indexPath.row == 2)  {
         cell.textLabel.text = @"Multiple Sections & Content View";
     }
-	else if (indexPath.row == 3)  {
-		cell.textLabel.text = @"Bookmarks";
-	}
+    else if (indexPath.row == 3)  {
+        cell.textLabel.text = @"Bookmarks";
+    }
+    else if (indexPath.row == 4)  {
+        cell.textLabel.text = @"Bookmarks Big";
+    }
 	else {
-		cell.textLabel.text = @"Bookmarks Big";
+		cell.textLabel.text = @"Edit Content";
 	}
 	
     return cell;
@@ -182,11 +191,14 @@
 	else if (button.tag == 2) {
 		[self multipleAndContentView:button];
 	}
-	else if (button.tag == 3) {
-		[self bookmarksView:button big: NO];
-	}
+    else if (button.tag == 3) {
+        [self bookmarksView:button big: NO];
+    }
+    else if (button.tag == 4) {
+        [self bookmarksView:button big: NO];
+    }
 	else {
-		[self bookmarksView:button big: YES];
+		[self multipleAndContentViewEdit:button ];
 	}
 }
 
@@ -202,13 +214,198 @@
 	else if (indexPath.row == 2) {
 		[self multipleAndContentView:nil];
 	}
-	else if (indexPath.row == 3) {
-		[self bookmarksView:nil big: NO];
-	}
+    else if (indexPath.row == 3) {
+        [self bookmarksView:nil big: NO];
+    }
+    else if (indexPath.row == 4) {
+        [self bookmarksView:nil big: NO];
+    }
     else {
-        [self bookmarksView:nil big: YES];
+        [self multipleAndContentViewEdit:nil ];
     }
 }
+
+- (void)multipleAndContentViewEdit:(UIView *)anchor {
+    
+//    UISlider *c = [[UISlider alloc] init];
+//    c.frame = (CGRect){CGPointZero, {290.0f, c.frame.size.height}};
+    UITextField *textField = [[UITextField alloc] init];
+    textField.frame = (CGRect){CGPointZero, {290.0f, 45}};
+    
+    textField.delegate = self;
+    textField.borderStyle = UITextBorderStyleLine;
+    textField.clearButtonMode = UITextFieldViewModeUnlessEditing;
+    textField.text = @"Some text";
+    textField.returnKeyType = UIReturnKeyDone;
+    
+    _activeTextField = textField;
+    
+    JGActionSheetSection *s3 = [JGActionSheetSection sectionWithTitle:nil message:nil contentView:textField];
+    
+    JGActionSheetSection *s4 = [JGActionSheetSection sectionWithTitle:nil message:nil buttonTitles:@[@"Add Bookmark", @"Cancel"] buttonStyle:JGActionSheetButtonStyleDefault];
+    
+    JGActionSheet *sheet = [JGActionSheet actionSheetWithSections:@[s4, s3]];
+    
+    sheet.delegate = self;
+    
+    sheet.insets = UIEdgeInsetsMake(20.0f, 0.0f, 0.0f, 0.0f);
+    
+    if (anchor && iPad) {
+        _anchorView = anchor;
+        _anchorLeft = YES;
+        _currentAnchoredActionSheet = sheet;
+        
+        CGPoint p = (CGPoint){-5.0f, CGRectGetMidY(anchor.bounds)};
+        
+        p = [self.navigationController.view convertPoint:p fromView:anchor];
+        
+        [sheet showFromPoint:p inView:self.navigationController.view arrowDirection:JGActionSheetArrowDirectionRight animated:YES];
+    }
+    else {
+        [sheet showInView:self.navigationController.view animated:YES];
+    }
+    
+    //if (iPad)
+    {
+        [sheet setOutsidePressBlock:^(JGActionSheet *sheet) {
+            [sheet dismissAnimated:NO];
+        }];
+    }
+    
+    [sheet setButtonPressedBlock:^(JGActionSheet *sheet, NSIndexPath *indexPath) {
+        [sheet dismissAnimated:NO];
+    }];
+    
+    _activeSheet = sheet;
+    
+    [self registerForKeyboardNotifications];
+}
+
+// ------------------------------------------------------------------------------------
+// Call this method somewhere in your view controller setup code.
+- (void)registerForKeyboardNotifications
+{
+    if (registerDone) return;
+    registerDone = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillBeHidden:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
+
+// Called when the UIKeyboardDidShowNotification is sent.
+- (void)keyboardWasShown:(NSNotification*)aNotification
+{
+    NSDictionary* info = [aNotification userInfo];
+    CGRect kbRect = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    
+    NSLog(@"keyboardWasShown kbRect=%@", NSStringFromCGRect(kbRect));
+   
+    // convertRect:fromWindow:
+
+    CGRect windowRect = [self.view.window convertRect:kbRect fromWindow:nil];
+    CGRect kbRect2    = [self.view        convertRect:windowRect fromView:nil];
+
+    NSLog(@"keyboardWasShown kbRect2=%@", NSStringFromCGRect(kbRect2));
+
+    //NSLog(@"keyboardWasShown _activeSheet.frame=%@", NSStringFromCGRect(_activeSheet.frame));
+    //NSLog(@"keyboardWasShown _activeSheet.bounds=%@", NSStringFromCGRect(_activeSheet.bounds));
+    //NSLog(@"keyboardWasShown _activeTextField.frame=%@", NSStringFromCGRect(_activeTextField.frame));
+    //NSLog(@"keyboardWasShown _activeTextField.bounds=%@", NSStringFromCGRect(_activeTextField.bounds));
+    
+    //NSLog(@"keyboardWasShown _activeSheet.scrollView=%@", _activeSheet.scrollView);
+    //NSLog(@"keyboardWasShown _activeSheet.scrollView.frame=%@", NSStringFromCGRect(_activeSheet.scrollView.frame));
+    NSLog(@"keyboardWasShown _activeSheet.scrollView.superview.frame=%@", NSStringFromCGRect(_activeSheet.scrollView.superview.frame));
+ 
+    CGSize kbSize = kbRect2.size;
+
+    CGRect  theRect = _activeSheet.scrollView.superview.frame;
+    saveRect = theRect;
+    theRect.origin.y -= kbSize.height;
+    _activeSheet.scrollView.superview.frame = theRect;
+
+    NSLog(@"keyboardWasShown theRect=%@", NSStringFromCGRect(theRect));
+
+#if 0
+    UIEdgeInsets contentInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0);
+    _activeSheet.scrollView.contentInset = contentInsets;
+    _activeSheet.scrollView.scrollIndicatorInsets = contentInsets;
+    {
+        CGRect bkgndRect = _activeTextField.superview.frame;
+        bkgndRect.size.height += kbSize.height;
+        [_activeTextField.superview setFrame:bkgndRect];
+        [_activeSheet.scrollView setContentOffset:CGPointMake(0.0, _activeTextField.frame.origin.y-kbSize.height) animated:YES];
+    
+    }
+#endif
+#if 0
+    {
+        // If active text field is hidden by keyboard, scroll it so it's visible
+        // Your app might not need or want this behavior.
+        CGRect aRect = self.view.frame;
+
+        NSLog(@"keyboardWasShown aRect=%@ _activeTextField.frame.origin=%@", NSStringFromCGRect(aRect), NSStringFromCGPoint(_activeTextField.frame.origin));
+
+        aRect.size.height -= kbSize.height;
+        //if (!CGRectContainsPoint(aRect, _activeTextField.frame.origin) )
+        {
+            [_activeSheet.scrollView scrollRectToVisible:_activeTextField.frame animated:YES];
+        }
+    }
+#endif
+}
+
+// Called when the UIKeyboardWillHideNotification is sent
+- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+{
+    NSLog(@"keyboardWillBeHidden theRect=%@", NSStringFromCGRect(saveRect));
+    _activeSheet.scrollView.superview.frame = saveRect;
+#if 0
+    UIEdgeInsets contentInsets = UIEdgeInsetsZero;
+    _activeSheet.scrollView.contentInset = contentInsets;
+    _activeSheet.scrollView.scrollIndicatorInsets = contentInsets;
+#endif
+}
+
+// ------------------------------------------------------------------------------------
+#pragma mark -
+#pragma mark <UITextFieldDelegate> Methods
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    //NSLog(@"EP_ConfirmBasicTextCtl textFieldShouldBeginEditing textField=%p", textField);
+    
+    return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    //NSLog(@"EP_ConfirmBasicTextCtl textFieldDidBeginEditing textField=%p", textField);
+    
+}
+
+// ------------------------------------------------------------------------------------
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+   // NSLog(@"EP_ConfirmBasicTextCtl textFieldDidEndEditing textField=%p", textField);
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSLog(@"EP_ConfirmBasicTextCtl textFieldShouldReturn textField=%p ", textField);
+    [textField resignFirstResponder];
+    
+    [_activeSheet dismissAnimated:NO];
+    
+    return YES;
+}
+
+// ------------------------------------------------------------------------------------
 
 - (void) bookmarksView: (UIView *)anchor big: (BOOL) big
 {
@@ -267,9 +464,10 @@
 		
 		CGPoint p = (CGPoint){-5.0f, CGRectGetMidY(anchor.bounds)};
 		
-		p = [self.navigationController.view convertPoint:p fromView:anchor];
+        UIView *theView = self.navigationController.view;
+		p = [theView convertPoint:p fromView:anchor];
 		
-		[_bookmarks showFromPoint:p inView:[[UIApplication sharedApplication] keyWindow] arrowDirection:JGActionSheetArrowDirectionRight animated:YES];
+		[_bookmarks showFromPoint:p inView:theView arrowDirection:JGActionSheetArrowDirectionRight animated:YES];
 	}
 	else {
 		[_bookmarks showInView:self.navigationController.view animated:YES];

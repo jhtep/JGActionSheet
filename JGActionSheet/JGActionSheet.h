@@ -166,6 +166,9 @@ typedef NS_ENUM(NSUInteger, JGActionSheetArrowDirection) {
  */
 @property (nonatomic, strong, readonly) NSArray *sections;
 
+// !!@ EP Mod
+@property (nonatomic, strong, readonly) UIScrollView *scrollView;
+
 /**
  The delegate of the action sheet.
  */
