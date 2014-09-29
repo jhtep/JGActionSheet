@@ -13,6 +13,7 @@
 		6BCBC6D71987D218000DDD51 /* JGTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCBC6D61987D218000DDD51 /* JGTableViewController.m */; };
 		6BCBC6E31988EC60000DDD51 /* JGActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCBC6E21988EC60000DDD51 /* JGActionSheet.m */; };
 		BA3DA54219D45FDA00D1935C /* Launch Screen.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA3DA54119D45FDA00D1935C /* Launch Screen.xib */; };
+		BA9FFF5719D9B1DE00355205 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = BA9FFF5619D9B1DE00355205 /* View.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		6BCBC6E11988EC60000DDD51 /* JGActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JGActionSheet.h; path = ../../JGActionSheet/JGActionSheet.h; sourceTree = "<group>"; };
 		6BCBC6E21988EC60000DDD51 /* JGActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JGActionSheet.m; path = ../../JGActionSheet/JGActionSheet.m; sourceTree = "<group>"; };
 		BA3DA54119D45FDA00D1935C /* Launch Screen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = "Launch Screen.xib"; path = "JGActionSheet Tests/Launch Screen.xib"; sourceTree = "<group>"; };
+		BA9FFF5619D9B1DE00355205 /* View.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				6BCBC6B71987D15C000DDD51 /* AppDelegate.m */,
 				6BCBC6D51987D218000DDD51 /* JGTableViewController.h */,
 				6BCBC6D61987D218000DDD51 /* JGTableViewController.m */,
+				BA9FFF5619D9B1DE00355205 /* View.xib */,
 				6BCBC6BF1987D15C000DDD51 /* Images.xcassets */,
 				6BCBC6B21987D15C000DDD51 /* Supporting Files */,
 			);
@@ -149,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6BCBC6C01987D15C000DDD51 /* Images.xcassets in Resources */,
+				BA9FFF5719D9B1DE00355205 /* View.xib in Resources */,
 				BA3DA54219D45FDA00D1935C /* Launch Screen.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
